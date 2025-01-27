@@ -1,11 +1,12 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-m
-#define MAX_NOME 100
-#define MAX_CATEGORIA 50
-#define MAX_UNIDADE 20
+
+#define MAX_NOME 50
+#define MAX_CATEGORIA 30
+#define MAX_UNIDADE 10
+#define MAX_TIPO 10
 #define MAX_REGISTROS 100
+
 
 typedef struct {
     char nome[MAX_NOME];
@@ -14,84 +15,15 @@ typedef struct {
     float quantidade;
 } Insumo;
 
+
 typedef struct {
-    char data[11];
-    char nome[MAX_NOME]; 
+    char nome[MAX_NOME];
     float quantidade;
     float quantidade_final;
-    char tipo_movimentacao[20];
+    char tipo_movimentacao[MAX_TIPO];
+    char data[11];
 } Movimentacao;
 
-void cadastrar_informacao(Insumo *insumos, int *total_insumos);
-void mostrar_insumos(Insumo *insumos, int total_insumos);
-void registrar_aquisicao(Insumo *insumos, int total_insumos, Movimentacao *movimentacoes, int *total_movimentacoes);
-void registrar_consumo(Insumo *insumos, int total_insumos, Movimentacao *movimentacoes, int *total_movimentacoes);
-void mostrar_movimentacoes(Movimentacao *movimentacoes, int total_movimentacoes);
-
-int main() {
-    Insumo insumos[MAX_REGISTROS];
-    Movimentacao movimentacoes[MAX_REGISTROS];
-    int total_insumos = 0;
-    int total_movimentacoes = 0;
-    int opcao;
-
-    do {
-        printf("\n1. Cadastrar novo insumo\n");
-        printf("2. Mostrar insumos cadastrados\n");
-        printf("3. Registrar aquisicao de insumo\n");
-        printf("4. Registrar consumo de insumo\n");
-        printf("5. Mostrar movimentacoes de estoque\n");
-        printf("6. Sair\n");
-        printf("Escolha uma opcao: ");
-        scanf("%d", &opcao);
-
-        switch(opcao) {
-            case 1:
-                cadastrar_informacao(insumos, &total_insumos);
-                break;
-            case 2:
-                mostrar_insumos(insumos, total_insumos);
-                break;
-            case 3:
-                registrar_aquisicao(insumos, total_insumos, movimentacoes, &total_movimentacoes);
-                break;
-            case 4:
-                registrar_consumo(insumos, total_insumos, movimentacoes, &total_movimentacoes);
-                break;
-            case 5:
-                mostrar_movimentacoes(movimentacoes, total_movimentacoes);
-                break;
-            case 6:
-                printf("Saindo...\n");
-                break;
-            default:
-                printf("Opcao invalida!\n");
-                break;
-        }
-    } while(opcao != 6);
-    
-    return 0;
-}
-
-void cadastrar_informacao(Insumo *insumos, int *total_insumos) {
-    if (*total_insumos >= MAX_REGISTROS) {
-        printf("Limite de insumos atingido!\n");
-        return;
-    }
-
-    Insumo novo_insumo;
-    printf("Digite o nome do insumo: ");
-    scanf(" %[^\n]", novo_insumo.nome);
-    printf("Digite a categoria do insumo: ");
-    scanf(" %[^\n]", novo_insumo.categoria);
-    printf("Digite a unidade do insumo: ");
-    scanf(" %[^\n]", novo_insumo.unidade);
-    printf("Digite a quantidade do insumo: ");
-    scanf("%f", &novo_insumo.quantidade);
-
-    insumos[*total_insumos] = novo_insumo;
-    (*total_insumos)++;
-}
 
 void mostrar_insumos(Insumo *insumos, int total_insumos) {
     if (total_insumos == 0) {
@@ -106,6 +38,7 @@ void mostrar_insumos(Insumo *insumos, int total_insumos) {
         printf("Quantidade: %.2f\n", insumos[i].quantidade);
     }
 }
+
 
 void registrar_aquisicao(Insumo *insumos, int total_insumos, Movimentacao *movimentacoes, int *total_movimentacoes) {
     if (*total_movimentacoes >= MAX_REGISTROS) {
@@ -148,6 +81,7 @@ void registrar_aquisicao(Insumo *insumos, int total_insumos, Movimentacao *movim
         printf("Insumo nao encontrado!\n");
     }
 }
+
 
 void registrar_consumo(Insumo *insumos, int total_insumos, Movimentacao *movimentacoes, int *total_movimentacoes) {
     if (*total_movimentacoes >= MAX_REGISTROS) {
@@ -195,6 +129,7 @@ void registrar_consumo(Insumo *insumos, int total_insumos, Movimentacao *movimen
     }
 }
 
+
 void mostrar_movimentacoes(Movimentacao *movimentacoes, int total_movimentacoes) {
     if (total_movimentacoes == 0) {
         printf("Nenhuma movimentacao registrada.\n");
@@ -209,4 +144,64 @@ void mostrar_movimentacoes(Movimentacao *movimentacoes, int total_movimentacoes)
         printf("Quantidade final: %.2f\n", movimentacoes[i].quantidade_final);
         printf("Tipo de movimentacao: %s\n", movimentacoes[i].tipo_movimentacao);
     }
+}
+
+int main() {
+    Insumo insumos[MAX_REGISTROS];
+    Movimentacao movimentacoes[MAX_REGISTROS];
+    int total_insumos = 0;
+    int total_movimentacoes = 0;
+    
+    int opcao;
+
+    do {
+        printf("\nEscolha uma opcao:\n");
+        printf("1. Registrar Insumo\n");
+        printf("2. Registrar Aquisicao\n");
+        printf("3. Registrar Consumo\n");
+        printf("4. Mostrar Insumos\n");
+        printf("5. Mostrar Movimentacoes\n");
+        printf("6. Sair\n");
+        printf("Opcao: ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                if (total_insumos < MAX_REGISTROS) {
+                    printf("Digite o nome do insumo: ");
+                    scanf(" %[^\n]", insumos[total_insumos].nome);
+                    printf("Digite a categoria do insumo: ");
+                    scanf(" %[^\n]", insumos[total_insumos].categoria);
+                    printf("Digite a unidade do insumo: ");
+                    scanf(" %[^\n]", insumos[total_insumos].unidade);
+                    printf("Digite a quantidade do insumo: ");
+                    scanf("%f", &insumos[total_insumos].quantidade);
+                    total_insumos++;
+                    printf("Insumo registrado com sucesso!\n");
+                } else {
+                    printf("Limite de insumos atingido!\n");
+                }
+                break;
+            case 2:
+                registrar_aquisicao(insumos, total_insumos, movimentacoes, &total_movimentacoes);
+                break;
+            case 3:
+                registrar_consumo(insumos, total_insumos, movimentacoes, &total_movimentacoes);
+                break;
+            case 4:
+                mostrar_insumos(insumos, total_insumos);
+                break;
+            case 5:
+                mostrar_movimentacoes(movimentacoes, total_movimentacoes);
+                break;
+            case 6:
+                printf("Saindo...\n");
+                break;
+            default:
+                printf("Opcao invalida! Tente novamente.\n");
+        }
+
+    } while (opcao != 6);
+
+    return 0;
 }
